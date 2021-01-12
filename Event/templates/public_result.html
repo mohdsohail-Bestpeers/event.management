@@ -1,0 +1,142 @@
+{% load static %} 
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Event Management</title>
+      <link rel="stylesheet" type="text/css" href="{% static 'css/plugins.css' %}">
+      <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+  </head>
+
+  <body id="home" data-spy="scroll" data-target="#navbar-wd" data-offset="98">
+  
+<!--Navigation Bar-->
+    <header class="top-header"> 
+      <nav class="navbar header-nav navbar-expand-lg">
+        <div class="container">
+          <a class="navbar-brand" href=""> <h1><i>Event Management</i></h1></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-wd" aria-controls="navbar-wd" aria-expanded="false" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbar-wd">
+              <ul class="navbar-nav">
+                <li><a class="nav-link active" href="/">Home</a></li>
+                <li><a class="nav-link" href="#about">About Us</a></li>
+                <li><a class="nav-link" href="#story">Story</a></li>
+                <li><a class="nav-link" href="#family">Family</a></li>
+                <li><a class="nav-link" href="#gallery">Gallery</a></li>
+                <li><a class="nav-link" href="#wedding">Wedding</a></li>
+                <li><a class="nav-link" href="#events">Events</a></li>
+                <!-- <li><a class="nav-link" href="/logout/">Logout</a></li> -->
+              </ul>
+            </div>
+        </div>
+      </nav>
+    </header>
+<!--Navigation Bar Ends--> 
+
+<!--Center Event Logo-->
+<div id="events" class="events-box">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="title-box">
+          <h2>Events</h2>
+          <p>Results of Event.</p>
+        </div>
+      </div>
+    </div>
+<!--Event Logo Ends-->
+
+
+<!-- search filter -->
+
+<div class="container" >
+  <div style="float: left;">
+    <form id="formid" data-formid="{{x}}">  
+      <h1>Filter</h1><input type="text" id="srch" placeholder="Enter Service">
+      <input type="text" id="srch2" placeholder="Enter City">
+      <input type="submit" id="btnsubmit" value="search">
+    </form>
+  </div>
+	<button style="float: right;" class="btn btn-primary" data-target="#mymodel" data-toggle="modal">Add Event</button>
+  <br><br><br>
+</div>
+
+<!--End search filter -->
+
+<!-- start form-->
+<br><br>
+<div class="modal fade" id="mymodel">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content"> 
+      <div class="modal-header">  
+          <h3 class="text-primary">Add Event</h3>
+          <button type="button" class="close" data-dismiss="modal"> &times; </button>
+      </div>
+            <div class="modal-body">
+              <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                <table>
+                  {{form1.as_table}}
+                  {{form2.as_table}}
+                  {{form3.as_table}}
+                  {{form4.as_table}}
+                </table>
+                </div>
+                <div class="modal-footer justify-content-center">
+                  <input type="submit" class="btn btn-danger" value="Save">
+                </div>
+              </form>
+            </div> 
+        </div>
+      </div>
+    </div>
+<!--End form-->
+
+
+<!--Results-->
+    <div class="row" id="dataid">
+      {% include 'public_post.html' %}  
+    </div>
+  </div>
+</div>
+ <!--end result-->    
+
+<!--script files-->
+<script src="{% static 'js/jquerry.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/responsiveslides.min.js' %}"></script>
+
+<!--Ajax start from here-->
+ <!-- search fields code -->
+<script type="text/javascript">
+  $("#formid").submit(function(event){
+  event.preventDefault();
+  console.log('clicked....')
+  var srch = $("#srch").val()
+  var srch2 = $("#srch2").val()
+  let searchform_id = $(this).attr("data-formid")       //attribute
+    console.log(searchform_id)
+  if(srch == "" && srch2 == ""){
+    console.log("empty now submit...")
+  }
+  else{
+    mydata = {srch:srch, srch2:srch2, searchform_id:searchform_id}
+    $.ajax({
+      url: "{% url 'find' %}",
+      headers: {'X-CSRFToken': $("input[name=csrfmiddlewaretoken]").val()},
+      method: "POST",
+      data: mydata,
+      success: function(data){
+        $("#dataid").html(data.html)
+      }
+    })
+  }
+})
+</script>
+
+
+<!--Ajax End-->
+</body>
+</html>

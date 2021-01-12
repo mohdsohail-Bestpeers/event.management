@@ -1,0 +1,130 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Event Management</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/plugins.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+   
+</head>
+
+<body id="home" data-spy="scroll" data-target="#navbar-wd" data-offset="98">
+
+<header class="top-header">
+  <nav class="navbar header-nav navbar-expand-lg">
+    <div class="container"><a class="navbar-brand" href=""><img src="static/images/logo.png" alt="website template image"></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-wd" aria-controls="navbar-wd" aria-expanded="false" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbar-wd">
+        <ul class="navbar-nav">
+          <li><a class="nav-link active" href="">Home</a></li>
+          <li><a class="nav-link" href="#story">Story</a></li>
+          <li><a class="nav-link" href="#about">About Us</a></li>
+          <li><a class="nav-link" href="#family">Family</a></li>
+          <li><a class="nav-link" href="#gallery">Gallery</a></li>
+          <li><a class="nav-link" href="#wedding">Wedding</a></li>
+          <li><a class="nav-link" href="#contact">Contact</a></li>
+          <li><a class="nav-link" href="/login/">Login</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+
+
+<div id="events" class="events-box">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="title-box">
+          <h2>Events</h2>
+          <p>A Moments of Life Events.</p>
+        </div>
+        <!-- add event button code starts -->
+        <button style="float: right;" class="btn btn-primary" data-target="#mymodel" data-toggle="modal">Add Event</button>
+       <!-- add event button code ends -->
+      </div>
+    </div>
+
+
+<!--Event form start -->
+<br>
+<div class="modal fade" id="mymodel">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content"> 
+      <div class="modal-header">  
+          <h3 class="text-primary">Add Event</h3>
+          <button type="button" class="close" data-dismiss="modal"> &times; </button>
+      </div>
+            <div class="modal-body">
+              <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                <table>
+                  
+                  {{form1.as_table}}
+                  {{form2.as_table}}
+                  {{form3.as_table}}
+                  {{form4.as_table}} 
+                </table>
+                </div>
+                <div class="modal-footer justify-content-center">
+                  <input type="submit" class="btn btn-danger" value="Save">
+                </div>
+              </form>
+            </div> 
+      </div>
+    </div>
+  </div>
+<!-- Event form Ends-->
+
+<!-- event list code starts -->
+
+    <div class="row">
+      <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="event-inner">
+          <div class=""><img class="img-fluid" src="static/images/event-img-01.jpg" alt="website template image"></div>
+            <h2>Wedding</h2>
+            <p>Thaali decoration/Venue decoration/Theme decoration/Arabic Mehendi Designs/
+             Afgani design/Dj Arrangements</p>
+          </div>
+        </div>
+
+
+
+
+        <div class="col-lg-4 col-md-6 col-sm-12">
+          <div class="event-inner">
+            <div class=""><img class="img-fluid" src="static/images/event-img-02.jpg" alt="website template image"></div>
+              <h2>Birthday Party</h2>
+              <p>birthday decoration/baloon decoration/lighting decoration/outdoor birthday planner/house decoration</p>
+            </div>
+          </div>
+
+
+          
+          <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="event-inner">
+              <div class=""><img class="img-fluid" src="static/images/gallery-04.jpg" alt="website template image"></div>
+                <h2>Stage Decoration</h2>
+                <p>wedding stage decoration/party decoration/concert decoration/fashion show decoration</p>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- event list code ends -->   
+
+
+
+<!--script files-->
+<script src="{% static 'js/jquerry.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/responsiveslides.min.js' %}"></script>
+
+</body>
+
+
+</html>

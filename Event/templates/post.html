@@ -1,0 +1,31 @@
+{% for obj in objs %}
+      <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="event-inner">
+          <div class="data"><img class="img-fluid" src="{{obj.event_photos.get.photo.url}}" alt="website template image"></div>
+          <h2><b>{{obj.service}}</b></h2>
+          <p>{{obj.start_date}}</p>
+          <p><b>{{obj.event_user.fname}} {{obj.event_user.lname}}</b> </p>
+         <p>{{obj.user_event_request}}</p>
+
+          <!-- Request Buttons -->
+          {% if obj.user_event_request == 'pending' %} 
+
+
+            <button name="accept" id="accept" value="accepted" class="approvalbtn" data-id={{obj.id}} style="background-color:green;color:white;">Accept</button>
+            <button name="decline" id="decline" value="rejected" class="approvalbtn" data-id={{obj.id}} style="background-color:red;color:white;">Reject</button>
+            
+           
+            {% else %}
+
+            <button name="accept" id="accept" value="accepted" class="approvalbtn" data-id={{obj.id}}, disabled="True" style="background-color:green;color:white;">Accept</button>
+            <button name="decline" id="decline" value="rejected" class="approvalbtn" data-id={{obj.id}}, disabled="True"  style="background-color:red;color:white;">Reject</button>
+
+             
+              {% endif %} 
+          <!-- ends	  -->
+        </div>
+      </div>
+      {% endfor %}
+
+
+
