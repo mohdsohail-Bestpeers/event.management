@@ -17,21 +17,23 @@ SERVICE = (
     ("stage_decoration", "Stage_Decoration"),
 )
 
+ROLL = (
+    ("publisher","Publisher"),
+    ("enduser","EndUser"),
+)
 
-'''Handle the Event user details in database administrations'''
-class EventUser(models.Model):
-    fname = models.CharField(max_length=50)
-    lname = models.CharField(max_length=50)
-    email = models.EmailField()
-    mobile = models.IntegerField()
+'''Handle the Event usertype details in database administrations'''
+class UserType(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True,)
+    Mobile_no = models.IntegerField()
+    roll = models.CharField( choices=ROLL, default="enduser", max_length=100)
+ 
 
-    def __str__(self):
-        return self.fname
 
 '''Handle the Event fields details in database administrations'''
 class Event(models.Model):
-    event_user = models.ForeignKey(EventUser, on_delete=models.CASCADE)
-    publisher = models.ForeignKey(User, on_delete=models.CASCADE)    #show created publisher from the administrations
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    publisher = models.ForeignKey(UserType, on_delete=models.CASCADE)    #show created publisher from the administrations
     service = models.CharField(choices=SERVICE, default="birthday", max_length=50)
     Max_Guest = models.IntegerField(null=True, blank=True)
     start_date = models.DateTimeField(
@@ -50,7 +52,8 @@ class Event(models.Model):
 '''Handle the Address details in database administrations'''
 class Address(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event_address')
-    city = models.CharField(choices=LOCATION, default="indore", max_length=50)
+    #city = models.CharField(choices=LOCATION, default="indore", max_length=50)
+    city = models.CharField(max_length=50, null=True)
     address = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
     pincode = models.IntegerField()

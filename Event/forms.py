@@ -1,24 +1,30 @@
 from django import forms
-from .models import EventUser, Event, Address, event_photo
+from .models import User, Event, Address, event_photo, UserType
 
 '''access all Event user field into form'''
-class event_user_form(forms.ModelForm):
+class user_form(forms.ModelForm):
     class Meta:
-        model = EventUser
-        fields = '__all__'
+        model = User
+        fields = ['first_name','last_name','email']
       
-    '''Mobile number validation'''  
-    def clean_mobile(self):
-        mobile_passed = str(self.cleaned_data.get("mobile"))
-        if len(mobile_passed) != 10:
-            raise forms.ValidationError("Not a vailid number..! Please enter again")
-        return mobile_passed
+    # '''Mobile number validation'''  
+    # def clean_mobile(self):
+    #     mobile_passed = str(self.cleaned_data.get("mobile"))
+    #     if len(mobile_passed) != 10:
+    #         raise forms.ValidationError("Not a vailid number..! Please enter again")
+    #     return mobile_passed
+
+
+class usertype_form(forms.ModelForm):
+    class Meta:
+        model = UserType
+        fields = ['Mobile_no']
 
 '''access some Event field into form'''
 class event_form(forms.ModelForm):
     class Meta:
         model = Event
-        exclude = ['event_user','payment_status','user_event_request']
+        exclude = ['event_user','payment_status','user_event_request', 'user', 'publisher']
         #in the exculde there is some fields mentioned will not visible in form  
 
 '''access some address field into form'''

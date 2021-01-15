@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import EventUser, Event, Address, event_photo
-from .forms import event_user_form, event_form, address_form, event_photo_form
+from .models import User,UserType, Event, Address, event_photo
+from .forms import user_form, usertype_form, event_form, address_form, event_photo_form
 from django.http import HttpResponseRedirect
 #from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
@@ -24,18 +24,33 @@ from django.core.mail import send_mail
 
 '''This function shows event accourding to Publishers'''
 def public_view(request, x):
-        objs = Event.objects.filter(publisher__first_name=x, user_event_request="accepted",)
+        objs = Event.objects.filter(publisher__user__first_name=x, user_event_request="accepted",)
         if request.method == 'POST':
-            form1 = event_user_form(request.POST)
+            #form1 = event_user_form(request.POST)
+            form1 = user_form(request.POST)
             form2 = event_form(request.POST)
             form3 = address_form(request.POST)
             form4 = event_photo_form(request.POST, request.FILES)
-            if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid():
+            form5 = usertype_form(request.POST)
+            publisher_obj = UserType.objects.get(user__username = x)
+            if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid() and form5.is_valid():
                 #form1
-                event_user_obj = form1.save()
+                email = form1.cleaned_data['email']
+                form1.instance.username = email
+                user_obj = form1.save()
+                password = User.objects.make_random_password()
+                print(password)
+                user_obj.set_password(password)
+                user_obj.save()
+
+                #form5
+                form5.save(commit=False)
+                form5.instance.user = user_obj
+                user_type_obj = form5.save()
                 #form2
                 form2.save(commit=False)
-                form2.instance.event_user = event_user_obj
+                form2.instance.user = user_obj
+                form2.instance.publisher = publisher_obj
                 event_obj = form2.save()
                 #form3
                 form3.save(commit=False)
@@ -45,22 +60,20 @@ def public_view(request, x):
                 form4.save(commit=False)
                 form4.instance.event = event_obj
                 form4.save()
-
                 '''smtp'''
-                subject = 'welcome to the Event Management Indore'
-                message = 'Hi {} {}, thank you for registering your event.'.format(event_user_obj.fname,event_user_obj.lname)
-                email_from = settings.EMAIL_HOST_USER 
-                recipient_list = [event_user_obj.email, ] 
-                send_mail( subject, message, email_from, recipient_list ) 
-
+                # subject = 'welcome to the Event Management Indore'
+                # message = 'Hi thank you for registering your event.'
+                # email_from = settings.EMAIL_HOST_USER 
+                # recipient_list = [event_user_obj.email, ] 
+                # send_mail( subject, message, email_from, recipient_list ) 
                 return HttpResponseRedirect('/payment/')
-        
         else:
-            form1 = event_user_form()
+            form1 = user_form()
             form2 = event_form()
             form3 = address_form()
             form4 = event_photo_form()
-        return render(request, 'public_result.html', {'objs':objs, 'form1':form1, 'form2':form2, 'form3':form3, 'form4':form4, 'x':x})
+            form5 = usertype_form()
+        return render(request, 'public_result.html', {'objs':objs, 'form1':form1, 'form2':form2, 'form3':form3, 'form4':form4, 'x':x, 'form5':form5})
    
 
 '''This is user login function'''
@@ -116,58 +129,74 @@ def find_data(request):
 
 
 def home(request):
-    objs = Event.objects.all() #filter(user_event_request=request.user)
-    if request.method == 'POST':
-        form1 = event_user_form(request.POST)
-        form2 = event_form(request.POST)
-        form3 = address_form(request.POST)
-        form4 = event_photo_form(request.POST, request.FILES)
-        if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid():
-            #form1
-            event_user_obj = form1.save()
-            #form2
-            form2.save(commit=False)
-            form2.instance.event_user = event_user_obj
-            event_obj = form2.save()
-            #form3
-            form3.save(commit=False)
-            form3.instance.event = event_obj
-            form3.save()
-            #form4
-            form4.save(commit=False)
-            form4.instance.event = event_obj
-            form4.save()
-            '''smtp'''
-            subject = 'welcome to the Event Management Indore'
-            message = 'Hi {} {}, thank you for registering your event.'.format(event_user_obj.fname,event_user_obj.lname)
-            email_from = settings.EMAIL_HOST_USER 
-            recipient_list = [event_user_obj.email, ] 
-            send_mail( subject, message, email_from, recipient_list ) 
-            return HttpResponseRedirect('/payment/')
-    else:
-        form1 = event_user_form()
-        form2 = event_form()
-        form3 = address_form()
-        form4 = event_photo_form()
-    return render(request, 'home.html', {'objs':objs, 'form1':form1, 'form2':form2, 'form3':form3, 'form4':form4})
+    # objs = Event.objects.all() #filter(user_event_request=request.user)
+    # if request.method == 'POST':
+    #     form1 = event_user_form(request.POST)
+    #     form2 = event_form(request.POST)
+    #     form3 = address_form(request.POST)
+    #     form4 = event_photo_form(request.POST, request.FILES)
+    #     if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid():
+    #         #form1
+    #         event_user_obj = form1.save()
+    #         #form2
+    #         form2.save(commit=False)
+    #         form2.instance.event_user = event_user_obj
+    #         event_obj = form2.save()
+    #         #form3
+    #         form3.save(commit=False)
+    #         form3.instance.event = event_obj
+    #         form3.save()
+    #         #form4
+    #         form4.save(commit=False)
+    #         form4.instance.event = event_obj
+    #         form4.save()
+    #         '''smtp'''
+    #         subject = 'welcome to the Event Management Indore'
+    #         message = 'Hi {} {}, thank you for registering your event.'.format(event_user_obj.fname,event_user_obj.lname)
+    #         email_from = settings.EMAIL_HOST_USER 
+    #         recipient_list = [event_user_obj.email, ] 
+    #         send_mail( subject, message, email_from, recipient_list ) 
+    #         return HttpResponseRedirect('/payment/')
+            
+    # else:
+    #     #form1 = event_user_form()
+    #     form1 = user_form()
+    #     form2 = event_form()
+    #     form3 = address_form()
+    #     form4 = event_photo_form()
+    # return render(request, 'home.html', {'objs':objs, 'form1':form1, 'form2':form2, 'form3':form3, 'form4':form4})
 
-    #return render(request,'home.html')
+    return render(request,'home.html')
 
 
 def publisher_view(request):
     if request.user.is_authenticated:
-        objs = Event.objects.filter(publisher__first_name=request.user.first_name)
+        objs = Event.objects.filter(publisher__user__first_name=request.user.first_name)
         if request.method == 'POST':
-            form1 = event_user_form(request.POST)
+            form1 = user_form(request.POST)
             form2 = event_form(request.POST)
             form3 = address_form(request.POST)
             form4 = event_photo_form(request.POST, request.FILES)
-            if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid():
+            form5 = usertype_form(request.POST)
+            publisher_obj = UserType.objects.get(user__username = request.user)
+            if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid() and form5.is_valid():
                 #form1
-                event_user_obj = form1.save()
+                email = form1.cleaned_data['email']
+                form1.instance.username = email
+                user_obj = form1.save()
+                password = User.objects.make_random_password()
+                print(password)
+                user_obj.set_password(password)
+                user_obj.save()
+                #form5
+                form5.save(commit=False)
+                form5.instance.user = user_obj
+                user_type_obj = form5.save()
                 #form2
                 form2.save(commit=False)
-                form2.instance.event_user = event_user_obj
+                form2.instance.user = user_obj
+                form2.instance.publisher = publisher_obj
+                form2.instance.user_event_request = 'accepted'
                 event_obj = form2.save()
                 #form3
                 form3.save(commit=False)
@@ -185,11 +214,12 @@ def publisher_view(request):
                 return HttpResponseRedirect('/event/')
         
         else:
-            form1 = event_user_form()
+            form1 = user_form()
             form2 = event_form()
             form3 = address_form()
             form4 = event_photo_form()
-        return render(request, 'result.html', {'objs':objs, 'form1':form1, 'form2':form2, 'form3':form3, 'form4':form4})
+            form5 = usertype_form()
+        return render(request, 'result.html', {'objs':objs, 'form1':form1, 'form2':form2, 'form3':form3, 'form4':form4, 'form5':form5})
     else:
         return HttpResponseRedirect('/login/')
   
@@ -205,4 +235,27 @@ def publisher_approval(request):
         objs = Event.objects.filter(publisher=event.publisher)
         html = render_to_string('post.html', context={'objs':objs})
         return JsonResponse({'status':200, 'html':html})
+
+
+def search_status(request):
+    if request.method == "GET":
+        search = request.GET.get('search')
+        search2 = request.GET.get('search2')  
+        if request.user.is_authenticated:
+            if(search==None and search2==None):
+                objs = Event.objects.filter(publisher__user__first_name=request.user.first_name)
+            else:
+                objs = Event.objects.filter(publisher__user__first_name=request.user.first_name, service__icontains=search, event_address__city__icontains=search2)
+            html = render_to_string('post.html', context={'objs':objs})
+        else:
+            srchid = request.GET.get('search_id')
+            if(search==None and search2==None):
+                objs = Event.objects.filter(publisher__user__first_name=srchid, user_event_request='accepted')
+            else:
+                objs = Event.objects.filter(publisher__user__first_name=srchid, user_event_request='accepted', service__icontains=search, event_address__city__icontains=search2)
+            html = render_to_string('public_post.html', context={'objs':objs})
+        return JsonResponse({'status':200, 'html':html})
+    else:
+        return JsonResponse({'status':400})
+
 

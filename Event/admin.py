@@ -1,11 +1,6 @@
 from django.contrib import admin
-from .models import EventUser, Event, Address, event_photo
+from .models import UserType, Event, Address, event_photo
 
-
-class EventUserAdmin(admin.ModelAdmin):
-    list_display = ("fname", "lname", "email")
-    list_filter = ("fname", "lname", "email")
-    search_fields = ("fname", "lname", "email", "mobile")
 
 
 class EventAdmin(admin.ModelAdmin):
@@ -21,10 +16,10 @@ class AddressAdmin(admin.ModelAdmin):
 
 
 class Event_photo_admin(admin.ModelAdmin):
-    list_display = "Event"
+    list_display = ("event")
 
 
-admin.site.register(EventUser, EventUserAdmin)
+admin.site.register(UserType)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Address, AddressAdmin)
 admin.site.register(event_photo)

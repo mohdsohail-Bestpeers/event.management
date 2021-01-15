@@ -36,6 +36,7 @@ urlpatterns = [
     path('find/', views.find_data, name='find'),
     path('event/',views.publisher_view),
     path('approval/', views.publisher_approval, name='approval'),
+    path('search_status/', views.search_status, name='search_status'),
     
     
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

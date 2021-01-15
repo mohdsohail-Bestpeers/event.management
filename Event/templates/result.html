@@ -49,11 +49,12 @@
 <!-- search filter -->
 <div class="container" >
   <div style="float: left;">
-    <form id="formid" >  
-      <h1>Filter</h1><input type="text" id="srch" placeholder="Enter Service">
-      <input type="text" id="srch2" placeholder="Enter City">
-      <input type="submit" id="btnsubmit" value="search">
-    </form>
+    <!-- live search -->
+    <h1>Filter</h1>
+    <input type="text" id="search" name="search" class="searchclass" data-search="{{x}}" placeholder="Enter Service"/>
+    <input type="text" id="search2" name="search2" class="searchclass" data-search="{{x}}" placeholder="Enter City"/>
+    <input id="reset" type="reset" name="reset" value="Reset" data-search="{{x}}"/>
+    <!-- end live search -->
   </div>
 	<button style="float: right;" class="btn btn-primary" data-target="#mymodel" data-toggle="modal">Add Event</button>
   <br>
@@ -76,6 +77,7 @@
                 <div class="form-group">
                 <table>
                   {{form1.as_table}}
+                  {{form5.as_table}}
                   {{form2.as_table}}
                   {{form3.as_table}}
                   {{form4.as_table}}
@@ -108,29 +110,26 @@
 
 <!--Ajax start from here-->
  <!-- search fields code -->
-<script type="text/javascript">
-  $("#formid").submit(function(event){
-  event.preventDefault();
-  console.log('clicked....')
-  var srch = $("#srch").val()
-  var srch2 = $("#srch2").val()
-  if(srch == "" && srch2 == ""){
-    console.log("empty now submit...")
-  }
-  else{
-    mydata = {srch:srch, srch2:srch2}
-    $.ajax({
-      url: "{% url 'find' %}",
-      headers: {'X-CSRFToken': $("input[name=csrfmiddlewaretoken]").val()},
-      method: "POST",
-      data: mydata,
-      success: function(data){
-        $("#dataid").html(data.html)
-      }
-    })
-  }
-})
-</script>
+ <script type="text/javascript">
+  $(".searchclass").on('keyup', function(event){
+   event.preventDefault();
+   console.log('text entered')
+   var search = $("#search").val()
+   var search2 = $("#search2").val()
+   let search_id = $(this).attr("data-search") 
+     mydata1 = {search:search, search2:search2,  search_id: search_id}
+     console.log('clicked')
+     $.ajax({
+       url: "{% url 'search_status' %}",
+       method: "GET",
+       data: mydata1,
+       success: function(data){
+         $("#dataid").html(data.html)
+       }
+     })
+ })
+ 
+ </script>
 
 <script>
   $(document).on('click', '.approvalbtn', function() {
@@ -150,41 +149,59 @@
       data: data,
       success: function(data){
         if(data.status==200){
-          $("#dataid").html(data.html)
-         
-        
+          $("#dataid").html(data.html)    
         }
       }
     })
-    
+});
+</script>
+<!--Ajax End-->
+
+
+<!--Reset Search using ajax-->
+<script type="text/javascript">
+  $("#reset").click(function() {
+    event.preventDefault();
+    let search_id = $(this).attr("data-search") 
+     mydata1 = {search_id: search_id}
+     console.log('clicked')
+     $.ajax({
+       url: "{% url 'search_status' %}",
+       method: "GET",
+       data: mydata1,
+       success: function(data){
+         $(".searchclass").val('');
+         $("#dataid").html(data.html)
+       }
+     })
+})
+</script>
+
+<!-- 
+button color code
+$("#decline").click(function(event) {
+    event.preventDefault(); // cancel default behavior
+
+    //... rest of add logic
+    this.value = "Declined"
+    $("#decline").css("color", "red");
+    $("#decline").prop('disabled', true);
+    $('#accept').attr('disabled','disabled');
 
 });
 
-// button color code
-// $("#decline").click(function(event) {
-//     event.preventDefault(); // cancel default behavior
+$("#accept").click(function(event) {
+    event.preventDefault(); // cancel default behavior
 
-//     //... rest of add logic
-//     this.value = "Declined"
-//     $("#decline").css("color", "red");
-//     $("#decline").prop('disabled', true);
-//     $('#accept').attr('disabled','disabled');
+    //... rest of add logic ( Request to  express js endpoint )
+    this.value = "Accepted"
+    $("#accept").css("color", "green");
+    $("#accept").prop('disabled', true); 
+    $('#decline').attr('disabled','disabled');
+}); -->
 
-// });
 
-// $("#accept").click(function(event) {
-//     event.preventDefault(); // cancel default behavior
 
-//     //... rest of add logic ( Request to  express js endpoint )
-//     this.value = "Accepted"
-//     $("#accept").css("color", "green");
-//     $("#accept").prop('disabled', true); 
-//     $('#decline').attr('disabled','disabled');
-// });
-
-</script>
-
-<!--Ajax End-->
 </body>
 </html>
 

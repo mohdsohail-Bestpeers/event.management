@@ -51,11 +51,12 @@
 
 <div class="container" >
   <div style="float: left;">
-    <form id="formid" data-formid="{{x}}">  
-      <h1>Filter</h1><input type="text" id="srch" placeholder="Enter Service">
-      <input type="text" id="srch2" placeholder="Enter City">
-      <input type="submit" id="btnsubmit" value="search">
-    </form>
+     <!-- live search -->
+    <h1>Filter</h1>
+    <input type="text" id="search" name="search" class="searchclass" data-search="{{x}}" placeholder="Enter Service"/>
+    <input type="text" id="search2" name="search2" class="searchclass" data-search="{{x}}" placeholder="Enter City"/>
+    <input id="reset" type="reset" name="reset" value="Reset" data-search="{{x}}"/>
+    <!-- end live search -->
   </div>
 	<button style="float: right;" class="btn btn-primary" data-target="#mymodel" data-toggle="modal">Add Event</button>
   <br><br><br>
@@ -78,6 +79,7 @@
                 <div class="form-group">
                 <table>
                   {{form1.as_table}}
+                  {{form5.as_table}}
                   {{form2.as_table}}
                   {{form3.as_table}}
                   {{form4.as_table}}
@@ -108,35 +110,49 @@
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/responsiveslides.min.js' %}"></script>
 
+
 <!--Ajax start from here-->
  <!-- search fields code -->
+ <script type="text/javascript">
+  $(".searchclass").on('keyup', function(event){
+   event.preventDefault();
+   console.log('text entered')
+   var search = $("#search").val()
+   var search2 = $("#search2").val()
+   let search_id = $(this).attr("data-search") 
+     mydata1 = {search:search, search2:search2,  search_id: search_id}
+     console.log('clicked')
+     $.ajax({
+       url: "{% url 'search_status' %}",
+       method: "GET",
+       data: mydata1,
+       success: function(data){
+         $("#dataid").html(data.html)
+       }
+     })
+ })
+ 
+ 
+ </script>
+<!--Ajax End-->
+
+<!--Reset Search using ajax-->
 <script type="text/javascript">
-  $("#formid").submit(function(event){
-  event.preventDefault();
-  console.log('clicked....')
-  var srch = $("#srch").val()
-  var srch2 = $("#srch2").val()
-  let searchform_id = $(this).attr("data-formid")       //attribute
-    console.log(searchform_id)
-  if(srch == "" && srch2 == ""){
-    console.log("empty now submit...")
-  }
-  else{
-    mydata = {srch:srch, srch2:srch2, searchform_id:searchform_id}
-    $.ajax({
-      url: "{% url 'find' %}",
-      headers: {'X-CSRFToken': $("input[name=csrfmiddlewaretoken]").val()},
-      method: "POST",
-      data: mydata,
-      success: function(data){
-        $("#dataid").html(data.html)
-      }
-    })
-  }
+  $("#reset").click(function() {
+    event.preventDefault();
+    let search_id = $(this).attr("data-search") 
+     mydata1 = {search_id: search_id}
+     console.log('clicked')
+     $.ajax({
+       url: "{% url 'search_status' %}",
+       method: "GET",
+       data: mydata1,
+       success: function(data){
+         $(".searchclass").val('');
+         $("#dataid").html(data.html)
+       }
+     })
 })
 </script>
-
-
-<!--Ajax End-->
 </body>
 </html>
