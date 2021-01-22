@@ -1,4 +1,5 @@
 {% for obj in objs %}
+
       <div class="col-lg-4 col-md-6 col-sm-12">
         <div class="event-inner">
           <div class="data"><img class="img-fluid" src="{{obj.event_photos.get.photo.url}}" alt="website template image"></div>
@@ -7,6 +8,8 @@
           <p><b>{{obj.user.first_name}} {{obj.user.last_name}}</b> </p>
          <p>{{obj.user_event_request}}</p>
 
+         <a class="edit-btn" href="{% url 'update' obj.id%}" >Edit</a>
+         
           <!-- Request Buttons -->
           {% if obj.user_event_request == 'pending' %} 
 

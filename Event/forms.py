@@ -25,6 +25,7 @@ class event_form(forms.ModelForm):
     class Meta:
         model = Event
         exclude = ['event_user','payment_status','user_event_request', 'user', 'publisher']
+
         #in the exculde there is some fields mentioned will not visible in form  
 
 '''access some address field into form'''
@@ -39,5 +40,9 @@ class event_photo_form(forms.ModelForm):
     class Meta:
         model = event_photo
         exclude = ["event"]
+        widgets = {
+            'photo': forms.FileInput()
+        }
         #exclude hide the event field from the form
+        
         

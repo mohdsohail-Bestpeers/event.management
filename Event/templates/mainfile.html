@@ -18,8 +18,12 @@
       <div class="collapse navbar-collapse justify-content-end" id="navbar-wd">
         <ul class="navbar-nav">
           <li><a class="nav-link active" href="">Home</a></li>
+          <li><a class="nav-link" href="#story">Story</a></li>
           <li><a class="nav-link" href="#about">About Us</a></li>
-          <li><a class="nav-link" href="/login/">Login</a></li>
+          <li><a class="nav-link" href="#family">Family</a></li>
+          <li><a class="nav-link" href="#gallery">Gallery</a></li>
+          <li><a class="nav-link" href="#wedding">Wedding</a></li>
+          <li><a class="nav-link" href="#contact">Contact</a></li>
         </ul>
       </div>
     </div>
@@ -28,7 +32,7 @@
 
 
 
-<br><br>
+
 <div id="events" class="events-box">
   <div class="container">
     <div class="row">
@@ -38,7 +42,7 @@
           <p>A Moments of Life Events.</p>
         </div>
         <!-- add event button code starts -->
-        <!-- <button style="float: right;" class="btn btn-primary" data-target="#mymodel" data-toggle="modal">Add Event</button> -->
+        <button style="float: right;" class="btn btn-primary" data-target="#mymodel" data-toggle="modal">Add Event</button>
        <!-- add event button code ends -->
       </div>
     </div>
@@ -76,40 +80,12 @@
 <!-- Event form Ends-->
 
 <!-- event list code starts -->
-
-    <div class="row">
-      <div class="col-lg-4 col-md-6 col-sm-12">
-        <div class="event-inner">
-          <div class=""><img class="img-fluid" src="static/images/event-img-01.jpg" alt="website template image"></div>
-            <h2>Wedding</h2>
-            <p>Thaali decoration/Venue decoration/Theme decoration/Arabic Mehendi Designs/
-             Afgani design/Dj Arrangements</p>
-          </div>
-        </div>
+{% block content %}
 
 
 
-
-        <div class="col-lg-4 col-md-6 col-sm-12">
-          <div class="event-inner">
-            <div class=""><img class="img-fluid" src="static/images/event-img-02.jpg" alt="website template image"></div>
-              <h2>Birthday Party</h2>
-              <p>birthday decoration/baloon decoration/lighting decoration/outdoor birthday planner/house decoration</p>
-            </div>
-          </div>
-
-
-          
-          <div class="col-lg-4 col-md-6 col-sm-12">
-            <div class="event-inner">
-              <div class=""><img class="img-fluid" src="static/images/gallery-04.jpg" alt="website template image"></div>
-                <h2>Stage Decoration</h2>
-                <p>wedding stage decoration/party decoration/concert decoration/fashion show decoration</p>
-              </div>
-            </div>
-        </div>
-    </div>
-</div>
+{% endblock content %}
+    
 <!-- event list code ends -->   
 
 
@@ -121,6 +97,5 @@
 <script src="{% static 'js/responsiveslides.min.js' %}"></script>
 
 </body>
-
 
 </html>

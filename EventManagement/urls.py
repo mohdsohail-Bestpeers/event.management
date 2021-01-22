@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 
 from Event import views
+#from Event.views import EndUser
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -37,7 +38,9 @@ urlpatterns = [
     path('event/',views.publisher_view),
     path('approval/', views.publisher_approval, name='approval'),
     path('search_status/', views.search_status, name='search_status'),
-    
+    path('userpage/',views.user_page),
+    path('event/update/<int:pk>',views.edit_detail, name='update'),
+    #path('main/',views.main)    #this file use to extend navbar only
     
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

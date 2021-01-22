@@ -1,69 +1,75 @@
- {% load static %}
-<!DOCTYPE html>   
-<html>   
-<head>  
-        <meta name="viewport" content="width=device-width, initial-scale=1">  
-        <title> Login Page </title>
-        <link rel="stylesheet" type="text/css" href="{% static 'css/plugins.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">  
-    <style>   
-Body {  
-  font-family: Calibri, Helvetica, sans-serif;  
-  background-color: white;  
-}  
-input[type=submit] {   
-       background-color: #4CAF50;   
-       width: 100%;  
-        color: black;   
-        padding: 15px;   
-        margin: 10px 0px;   
-        border: none;   
-        cursor: pointer;   
-         }   
- form {   
-        border: 3px solid #f1f1f1;   
-    }   
- input[type=text], input[type=password] {   
-        width: 100%;   
-        margin: 8px 0;  
-        padding: 12px 20px;   
-        display: inline-block;   
-        border: 2px solid green;   
-        box-sizing: border-box;   
-    }  
- input:hover {   
-        opacity: 0.7;   
-    }   
-  .cancelbtn {   
-        width: auto;   
-        padding: 10px 18px;  
-        margin: 10px 5px;  
-    }   
-        
-     
- .container { 
-        width: 50%;  
-        padding: 25px;   
-        background-color: lightblue;  
-    }   
-    </style>   
-</head>    
-<body>    
+{% load crispy_forms_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html>
 
-    <!-- login form -->
-        
-       <center> <h1>Event Login Form </h1> </center>   
-        <form method="POST">
-            <center>
-                <div class="container">    
-                    {% csrf_token %}
-                    {{form.as_p}}   
-                    <input type="submit" value="Login">       
-                    <button type="button" class="cancelbtn"> Cancel</button>   
-                    Forgot <a href="#"> password? </a>
-                </div>  
-            </center>     
-        </form>  
-        <!-- form ends -->
- </body>     
-</html>  
+<head>
+    <title>Event Management</title>
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'css/plugins.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+   
+</head>
+
+<body id="home" data-spy="scroll" data-target="#navbar-wd" data-offset="98">
+
+<header class="top-header">
+  <nav class="navbar header-nav navbar-expand-lg">
+    <div class="container"><a class="navbar-brand" href=""><img src="{% static "images/event-logo.jpg" %}" alt="website template image"/></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-wd" aria-controls="navbar-wd" aria-expanded="false" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbar-wd">
+        <ul class="navbar-nav">
+          <li><a class="nav-link active" href="/">Home</a></li>
+          <li><a class="nav-link" href="#about">About Us</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+
+
+<br><br>
+<div id="events" class="events-box">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="title-box">
+            <h2>Events</h2>
+            <p>A Moments of Life Events.</p>
+          </div>
+        </div>
+      </div>
+
+        <br><br>
+        <center>
+        <div class="container">
+            <div class="row" >
+                <div class="col-lg-12">
+                    <div class="">
+                        <form method="post" action="">
+                            <h3>LOGIN BELOW</h3>
+                            {% csrf_token %}
+                            {{ form | crispy }}
+                            <br>
+                            <button type="submit" value="Login" class="btn btn-success">LOGIN</button>
+                    
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </center>
+
+
+    
+
+<!--script files-->
+<script src="{% static 'js/jquerry.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/responsiveslides.min.js' %}"></script>
+
+</body>
+
+</html>

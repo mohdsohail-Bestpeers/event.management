@@ -6,24 +6,20 @@
     <title>Event Management</title>
       <link rel="stylesheet" type="text/css" href="{% static 'css/plugins.css' %}">
       <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
   </head>
 
   <body id="home" data-spy="scroll" data-target="#navbar-wd" data-offset="98">
   
 <!--Navigation Bar-->
-    <header class="top-header"> 
+    <header class="top-header">
       <nav class="navbar header-nav navbar-expand-lg">
-        <div class="container">
-          <a class="navbar-brand" href=""> <h1><i>Event Management</i></h1></a>
+        <div class="container"><a class="navbar-brand" href=""><img src="{% static "images/event-logo.jpg" %}" alt="website template image"/></a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-wd" aria-controls="navbar-wd" aria-expanded="false" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
             <div class="collapse navbar-collapse justify-content-end" id="navbar-wd">
               <ul class="navbar-nav">
                 <li><a class="nav-link active" href="/">Home</a></li>
                 <li><a class="nav-link" href="#about">About Us</a></li>
-                <li><a class="nav-link" href="#story">Story</a></li>
-                <li><a class="nav-link" href="#family">Family</a></li>
-                <li><a class="nav-link" href="#gallery">Gallery</a></li>
-                <li><a class="nav-link" href="#wedding">Wedding</a></li>
                 <li><a class="nav-link" href="#events">Events</a></li>
                 <!-- <li><a class="nav-link" href="/logout/">Logout</a></li> -->
               </ul>
@@ -34,6 +30,7 @@
 <!--Navigation Bar Ends--> 
 
 <!--Center Event Logo-->
+<br><br>
 <div id="events" class="events-box">
   <div class="container">
     <div class="row">
@@ -51,12 +48,30 @@
 
 <div class="container" >
   <div style="float: left;">
-     <!-- live search -->
+     <!-- search -->
     <h1>Filter</h1>
-    <input type="text" id="search" name="search" class="searchclass" data-search="{{x}}" placeholder="Enter Service"/>
-    <input type="text" id="search2" name="search2" class="searchclass" data-search="{{x}}" placeholder="Enter City"/>
-    <input id="reset" type="reset" name="reset" value="Reset" data-search="{{x}}"/>
+
+    <!-- dropdown search -->
+      <select name="serviceid" id=serviceid data-search="{{x}}" class="searchclass">
+        <option value="">Select Service</option>
+          {% for obj in service_search %}
+            <option value="{{obj.service}}">{{obj.service}}</option>
+          {% endfor %}
+      </select>
+
+      <select name="cityid" id=cityid data-search="{{x}}" class="searchclass">
+        <option value="">Select City</option>
+          {% for obj2 in city_search %}
+            <option value="{{obj2.city}}">{{obj2.city}}</option>
+          {% endfor %}
+      </select>
+    <!-- dropdown search ends -->
+
+     <!-- live search -->
+    <input type="text" id="search" name="search" class="searchclass" data-search="{{x}}" placeholder="Enter Name"/>
+    <input id="reset" type="submit" name="reset" value="Reset" data-search="{{x}}"/>
     <!-- end live search -->
+
   </div>
 	<button style="float: right;" class="btn btn-primary" data-target="#mymodel" data-toggle="modal">Add Event</button>
   <br><br><br>
@@ -74,7 +89,7 @@
           <button type="button" class="close" data-dismiss="modal"> &times; </button>
       </div>
             <div class="modal-body">
-              <form method="POST" enctype="multipart/form-data">
+              <form method="POST" enctype="multipart/form-data" id="datepicker">
                 {% csrf_token %}
                 <div class="form-group">
                 <table>
@@ -110,18 +125,18 @@
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/responsiveslides.min.js' %}"></script>
 
-
 <!--Ajax start from here-->
  <!-- search fields code -->
  <script type="text/javascript">
-  $(".searchclass").on('keyup', function(event){
+  $(document).on('keyup', ".searchclass", function(event){
    event.preventDefault();
    console.log('text entered')
    var search = $("#search").val()
-   var search2 = $("#search2").val()
+   var dropdown1 = $("#serviceid").val()
+   var dropdown2 = $("#cityid").val()
    let search_id = $(this).attr("data-search") 
-     mydata1 = {search:search, search2:search2,  search_id: search_id}
-     console.log('clicked')
+     mydata1 = {search:search, dropdown1:dropdown1, dropdown2:dropdown2, search_id: search_id}
+     console.log('search data 1')
      $.ajax({
        url: "{% url 'search_status' %}",
        method: "GET",
@@ -132,17 +147,36 @@
      })
  })
  
+
+ $(document).on('change', ".searchclass", function(){
+    event.preventDefault();
+    console.log('enter in dropdown')
+    var search = $("#search").val()
+    var dropdown1 = $("#serviceid").val()
+    var dropdown2= $("#cityid").val();
+    let search_id = $(this).attr("data-search") 
+    mydata1 = {search:search, dropdown1:dropdown1, dropdown2:dropdown2, search_id: search_id}
+     console.log('dropdown data 2')
+    $.ajax({
+      url : "{% url 'search_status' %}",
+      method : "GET",
+      data:  mydata1,
+      success: function(data){
+         $("#dataid").html(data.html)
+       }
+    })
+  })
  
  </script>
 <!--Ajax End-->
 
 <!--Reset Search using ajax-->
 <script type="text/javascript">
-  $("#reset").click(function() {
+  $(document).on('click', "#reset", function() {
     event.preventDefault();
-    let search_id = $(this).attr("data-search") 
-     mydata1 = {search_id: search_id}
-     console.log('clicked')
+    let search_id = $(this).attr("data-search")
+    mydata1 = {search_id: search_id}
+     console.log('drop')
      $.ajax({
        url: "{% url 'search_status' %}",
        method: "GET",
@@ -154,5 +188,8 @@
      })
 })
 </script>
+
+
+
 </body>
 </html>

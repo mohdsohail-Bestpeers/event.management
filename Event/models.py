@@ -24,7 +24,7 @@ ROLL = (
 
 '''Handle the Event usertype details in database administrations'''
 class UserType(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True,)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='user_type')
     Mobile_no = models.IntegerField()
     roll = models.CharField( choices=ROLL, default="enduser", max_length=100)
  

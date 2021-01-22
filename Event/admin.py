@@ -2,9 +2,8 @@ from django.contrib import admin
 from .models import UserType, Event, Address, event_photo
 
 
-
 class EventAdmin(admin.ModelAdmin):
-    list_display = ("service", "Max_Guest", "start_date", "end_date","payment_status","user_event_request")
+    list_display = ("id","service", "Max_Guest", "start_date", "end_date","payment_status","user_event_request")
     list_filter = ("service", "Max_Guest", "start_date", "end_date")
     search_fields = ("service", "Max_Guest", "start_date", "end_date")
 
