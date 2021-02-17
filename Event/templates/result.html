@@ -4,6 +4,7 @@
 <html>
   <head>
     <title>Event Management</title>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css"> 
       <link rel="stylesheet" type="text/css" href="{% static 'css/plugins.css' %}">
       <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
   </head>
@@ -122,6 +123,8 @@
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/responsiveslides.min.js' %}"></script>
 
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 <!--Ajax start from here-->
  <!-- search fields code -->
  <script type="text/javascript">
@@ -211,6 +214,18 @@
      })
 })
 </script>
+
+<script>
+  $(function() {
+    $( ".datepicker" ).datepicker({
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "2021:2024",
+      dateFormat: 'dd-mm-yy',
+      // You can put more options here.
+    });
+  });
+  </script>
 
 <!-- 
 button color code

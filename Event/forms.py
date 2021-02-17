@@ -1,6 +1,10 @@
 from django import forms
 from .models import User, Event, Address, event_photo, UserType
 
+# from functools import partial
+# DateInput = partial(forms.DateInput, {'class': 'datepicker'})
+
+
 '''access all Event user field into form'''
 class user_form(forms.ModelForm):
     class Meta:
@@ -20,10 +24,18 @@ class usertype_form(forms.ModelForm):
         model = UserType
         fields = ['Mobile_no']
 
+
 '''access some Event field into form'''
 class event_form(forms.ModelForm):
     class Meta:
         model = Event
+        widgets = {
+            'start_date': forms.DateInput(attrs={'class':'datepicker'}),
+            'end_date': forms.DateInput(attrs={'class':'datepicker'}),
+            'description': forms.Textarea(
+                attrs={'placeholder': 'Describe Your Needs !'}),
+        }
+        
         exclude = ['event_user','payment_status','user_event_request', 'user', 'publisher']
 
         #in the exculde there is some fields mentioned will not visible in form  
